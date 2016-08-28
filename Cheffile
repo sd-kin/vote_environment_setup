@@ -1,0 +1,11 @@
+site "https://supermarket.getchef.com/api/v1"
+
+cookbook 'apt'
+cookbook 'build-essential'
+cookbook 'ruby_build'
+cookbook 'nodejs'
+cookbook 'phantomjs'
+cookbook 'rvm'
+cookbook 'postgresql'
+cookbook 'database'
+
