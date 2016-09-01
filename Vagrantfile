@@ -69,11 +69,11 @@ Vagrant.configure("2") do |config|
     chef.cookbooks_path = ["cookbooks", "site-cookbooks"]
     
     chef.add_recipe "apt"
-    #chef.add_recipe "nodejs"
-    #chef.add_recipe "ruby_build"
-    #chef.add_recipe "phantomjs::default"
-    #chef.add_recipe "rvm::user"
-    #chef.add_recipe "rvm::vagrant"
+    chef.add_recipe "nodejs"
+    chef.add_recipe "ruby_build"
+    chef.add_recipe "phantomjs2::default"
+    chef.add_recipe "rvm::user"
+    chef.add_recipe "rvm::vagrant"
     chef.add_recipe "postgresql::server"
     chef.add_recipe "vote_deploy::default"
 
