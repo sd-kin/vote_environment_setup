@@ -14,9 +14,10 @@ else
   wget "https://releases.hashicorp.com/vagrant/1.8.5/vagrant_1.8.5_x86_64.deb"
   sudo dpkg -i vagrant_1.8.5_x86_64.deb
   rm -rf vagrant_1.8.5_x86_64.deb
-  vagrant plugin install vagrant-vbguest
-  vagrant plugin install vagrant-librarian-chef-nochef
 fi
+
+vagrant plugin install vagrant-vbguest
+vagrant plugin install vagrant-librarian-chef-nochef
 
 vagrant up --provision
 
