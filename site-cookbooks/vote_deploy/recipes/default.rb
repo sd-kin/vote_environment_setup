@@ -15,32 +15,33 @@ git "/vagrant/vote" do
   action :checkout
 end
 
-ruby_block 'ddd' do
-block do
-file = File.open '/vagrant/vote/config/database.yml'
-databases = YAML.load file
-end
-end
-
 connection_info = {
         host: 'localhost',
         username: 'postgres',
         password: 'postgres'
-      }
+      }   
 
-YAML.load(File.open '/vagrant/vote/config/database.yml').each do |db|    
+postgresql_database_user 'vote_dev' do
+  connection connection_info
+  password 'vote_dev'
+  action :create
+end
+postgresql_database_user 'vote_test' do
+  connection connection_info
+  password 'vote_test'
+  action :create
+end
 
-  postgresql_database_user db.last['username'] do
-    connection connection_info
-    password db.last['password']
-    action :create
-  end
+postgresql_database 'vote_dev' do
+  connection connection_info
+  owner 'vote_dev'
+  action :create
+end
 
-  postgresql_database db.last['database'] do
-    connection connection_info
-    owner db.last['username']
-    action :create
-  end
+postgresql_database 'vote_test' do
+  connection connection_info
+  owner 'vote_test'
+  action :create
 end
 
 rvm_shell 'bundle_install' do
