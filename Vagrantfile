@@ -76,6 +76,7 @@ Vagrant.configure("2") do |config|
     chef.add_recipe "rvm::vagrant"
     chef.add_recipe "postgresql::server"
     chef.add_recipe "vote_deploy::default"
+    chef.add_recipe "redis2::default_instance"
 
     chef.json = {
       #<rvm>
