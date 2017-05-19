@@ -22,8 +22,8 @@ Vagrant.configure("2") do |config|
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
-  config.vm.network "forwarded_port", guest: 3000 , host: 3000
-  config.vm.network "forwarded_port", guest: 5432 , host: 5432
+  config.vm.network "forwarded_port", guest: 3000 , host: 3000, host_ip: "localhost"
+  config.vm.network "forwarded_port", guest: 5432 , host: 5432, host_ip: "localhost"
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -65,64 +65,8 @@ Vagrant.configure("2") do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  config.vm.provision :chef_solo do |chef|
-    chef.cookbooks_path = ["cookbooks", "site-cookbooks"]
-    
-    chef.add_recipe "apt"
-    chef.add_recipe "nodejs"
-    chef.add_recipe "ruby_build"
-    chef.add_recipe "phantomjs2::default"
-    chef.add_recipe "rvm::user"
-    chef.add_recipe "rvm::vagrant"
-    chef.add_recipe "postgresql::server"
-    chef.add_recipe "vote_deploy::default"
-    chef.add_recipe "redis2::default_instance"
-
-    chef.json = {
-      #<rvm>
-      rvm: {
-            user_installs: [{
-                             user: 'vagrant',
-                             rubies: ['2.3.0'],
-                             default_ruby: '2.3.0'
-                           }],
-            vagrant: {
-                      system_chef_solo: '/opt/chef/bin/chef-solo'
-                     }
-           }, #</rvm>
-
-      #<postgres>
-      postgresql: {
-                   config: {
-                             ssl: false,
-                             listen_addresses: '*'
-                            },
-                   password: {
-                              postgres: 'postgres'
-                             },
-                   pg_hba: [{
-                            type: 'local',
-                            db:   'all',
-                            user: 'postgres',
-                            addr:  nil,
-                            method: 'ident'
-                           },
-                           {
-                            type: 'local',
-                            db:   'all',
-                            user: 'all',
-                            addr:  nil,
-                            method: 'md5'
-                           },
-                            {
-                            type: 'host',
-                            db:   'all',
-                            user: 'all',
-                            addr:  '127.0.0.1/32',
-                            method: 'md5'
-                           }]
-                   }#</postgres>
-
-                }
+  config.vm.provision :shell do |shell|
+    shell.path = 'provision.sh'
+    shell.args = ['sd-kin', '**********']
   end
 end
