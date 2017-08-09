@@ -38,7 +38,8 @@ Vagrant.configure("2") do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
-  config.vm.synced_folder ".", "/vagrant"
+  config.vm.synced_folder ".", "/vagrant", owner: "vagrant",
+  group: "vagrant", mount_options: ["uid=1234", "gid=1234"]
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -50,7 +51,9 @@ Vagrant.configure("2") do |config|
   #
       # Customize the amount of memory on the VM:
       vb.memory = "2048"
+	  vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/SHARE_NAME", "1"]
    end
+  
   #
   # View the documentation for the provider you are using for more
   # information on available options.
@@ -67,6 +70,6 @@ Vagrant.configure("2") do |config|
   # documentation for more information about their specific syntax and use.
   config.vm.provision :shell do |shell|
     shell.path = 'provision.sh'
-    shell.args = ['sd-kin', '**********']
+    shell.args = ['sd-kin', '********']
   end
 end
