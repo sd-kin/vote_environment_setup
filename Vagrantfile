@@ -22,12 +22,15 @@ Vagrant.configure("2") do |config|
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
+
   config.vm.network "forwarded_port", guest: 3000 , host: 3000, host_ip: "localhost"
   config.vm.network "forwarded_port", guest: 5432 , host: 5432, host_ip: "localhost"
+  config.vm.network "forwarded_port", guest: 8080 , host: 8080, host_ip: "localhost"
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
   # config.vm.network "private_network", ip: "192.168.33.10"
+  config.vm.network "private_network", ip: "10.10.10.10"
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
@@ -53,7 +56,7 @@ Vagrant.configure("2") do |config|
       vb.memory = "2048"
 	  vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/SHARE_NAME", "1"]
    end
-  
+
   #
   # View the documentation for the provider you are using for more
   # information on available options.
