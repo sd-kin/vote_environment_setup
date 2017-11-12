@@ -41,6 +41,7 @@ if su - vagrant -c 'command -v rvm >/dev/null 2>&1'
 then
   echo 'rvm installed'
 else
+  su - vagrant -c 'command curl -sSL https://rvm.io/mpapis.asc | gpg --import -'
   su - vagrant -c 'curl -sSL https://get.rvm.io | bash -s stable --ruby=2.3.1 --with-gems="bundler"'
   su - vagrant -c 'rvm rvmrc warning ignore allGemfiles'
 fi
@@ -80,6 +81,16 @@ else
   sudo ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/local/bin
 fi
 
+# yarn
+if su - vagrant -c 'command -v yarn >/dev/null 2>&1'
+then
+  echo 'yarn installed'
+else
+  su - vagrant -c 'curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -'
+  su - vagrant -c 'echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list'
+  su - vagrant -c 'sudo apt-get update && sudo apt-get install yarn'
+fi
+
 # add github to known hosts
 if [ -f "/home/vagrant/.ssh/known_hosts" ]
 then
@@ -93,8 +104,9 @@ sudo -u postgres psql -c "create role vote_dev with createdb login password 'vot
 sudo -u postgres psql -c "create role vote_test with createdb login password 'vote_test'"
 su - vagrant -c "git clone git@github.com:sd-kin/vote.git /vagrant/vote"
 su - vagrant -c "cd /vagrant/vote && bundle"
-su - vagrant -c "cd /vagrant/vote && rake db:setup"
-#su - vagrant -c "cd /vagrant/vote && rake db:migrate && RAILS_ENV=test rake db:migrate"
+su - vagrant -c "cd /vagrant/vote && rake db:create"
+su - vagrant -c "cd /vagrant/vote && rake db:migrate && RAILS_ENV=test rake db:migrate"
+su - vagrant -c "rails webpacker:install"
 
 apt-get -y autoremove
 
